@@ -5,7 +5,7 @@ const carrito = document.querySelector('#carrito')
 const contenedorCarrito = document.querySelector('#lista-carrito tbody')
 const vaciarCarritoBtn = document.querySelector('#vaciar-carrito')
 const listaCursos = document.querySelector('#lista-cursos')
-let articulosCarrito = localStorage
+let articulosCarrito = []
 
 
 //  *** Listeners *** 
@@ -18,9 +18,14 @@ function cargarEventListeners () {
     vaciarCarritoBtn.addEventListener('click', () => {
         articulosCarrito = []   // Vaciamos el array
         limpiarHTML()           // Limpiamos el HTML
+        sincronizarCarrito()
+    })
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+        articulosCarrito = JSON.parse(localStorage.getItem('carrito')) || []
+        carritoHTML()
     })
 }
-
 
 //  *** Funciones *** 
 
@@ -86,7 +91,10 @@ function añadirCurso(e) {
             </td>
             `
         contenedorCarrito.appendChild(row)
+
     })
+
+    sincronizarCarrito()
  }
 
  // Función para limpiar el HTML (elimina los cursos del tbody)
@@ -95,3 +103,7 @@ function añadirCurso(e) {
         contenedorCarrito.firstChild.remove()
     }
  }
+
+  function sincronizarCarrito(){
+    localStorage.setItem('carrito', JSON.stringify(articulosCarrito))
+  }
